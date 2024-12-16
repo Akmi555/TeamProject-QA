@@ -18,3 +18,4 @@ plugin/
 !settings.gradle
 !gradlew
 !gradlew.bat
+!README.md
