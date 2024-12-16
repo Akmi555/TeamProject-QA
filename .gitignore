@@ -1,21 +1,20 @@
+# Игнорируем
+.gradle/
+.idea/
+allure-results/
+build/
+gradle/
+out/
+plugin/
 
+# Исключаем всё
 *
 
+# Включаем
 !src/
+!BerlinTravelAgency*.json
+!newman-report.html
 !build.gradle
 !settings.gradle
 !gradlew
 !gradlew.bat
-!BerlinTravelAgencyAllTestsAfterDeBUG.postman_collection.json
-!BerlinTravelAgencyTests.postman_test_run.json
-!BerlinTravelAgency.postman_environment.json
-!newman-report.html
-
-!test_logs/
-!test_screenshots/
-
-.gradle/
-build/
-out/
-.idea/
-allure-results/

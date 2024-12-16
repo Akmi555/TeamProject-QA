@@ -1,39 +1,57 @@
 package registrationAndindeElement;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class RegistrationTest {
-    private WebDriver driver;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    @BeforeMethod
-    public void setUp() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.get("http://localhost:3000/#/registration");
-        driver.manage().window().setPosition(new Point(2500, 0));
-                driver.manage().window().maximize();
+public class CreateAccountPositiveTests extends TestBase {
+
+
+    private String generateUniqueEmail() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        return "user_" + timestamp + "@test.com";
+    }
+
+    private void fillInputField(By locator, String value) {
+        WebElement element = driver.findElement(locator);
+        element.click();
+        element.clear();
+        element.sendKeys(value);
     }
 
     @Test
     public void testSuccessfulRegistration() {
-        // Проверка открытия страницы
-        String title = driver.getTitle();
-        System.out.println("Page title is: " + title);
+        driver.findElement(By.xpath("//a[.='Личный кабинет']")).click();
+        driver.findElement(By.xpath("//a[.='Регистрация']")).click();
+
+        fillInputField(By.name("firstName"), "John");
+        fillInputField(By.name("lastName"), "Smith");
+
+        String uniqueEmail = generateUniqueEmail();
+        fillInputField(By.name("email"), uniqueEmail);
+
+        fillInputField(By.name("password"), "Qwerty1!");
+
+        driver.findElement(By.xpath("//button[.='Зарегистрироваться']")).click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement forgotPasswordElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Забыли пароль?']")));
+
+        Assert.assertTrue(forgotPasswordElement.isDisplayed(), "Элемент 'Забыли пароль?' не найден");
     }
 
 
     @AfterMethod(enabled = false)
     public void tearDown() {
             driver.quit();
-
-        }
-
+    }
 }
