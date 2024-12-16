@@ -1,5 +1,5 @@
 
-# User Registration & Authorization Automation
+# User Registration & Authorization Automation Berlin Travel Agency
 
 This repository contains a comprehensive suite of automated tests for user registration and login functionality. Built with **Selenium WebDriver** and **TestNG**, this project automates the testing of various input field validations, error handling, and password visibility toggling in the user registration and login forms.
 

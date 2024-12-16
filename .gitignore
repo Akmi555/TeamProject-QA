@@ -1,16 +1,17 @@
-# Игнорируем
 .gradle/
 .idea/
 allure-results/
 build/
-gradle/
 out/
 plugin/
 
-# Исключаем всё
+*.class
+*.log
+*.tmp
+*.bak
+
 *
 
-# Включаем
 !src/
 !BerlinTravelAgency*.json
 !newman-report.html
