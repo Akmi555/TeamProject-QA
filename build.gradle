@@ -59,14 +59,11 @@ test {
     }
 }
 
-// Пример дополнительной функции для регистрации тестовых задач
-// Функция позволяет регистрировать задачи для разных наборов тестов
-// Пример: smoke, regression и т.д.
-/*
+
 def registerTask(String taskName, String suitePath) {
     tasks.register(taskName, Test) {
         useTestNG {
-            suites suitePath // Путь к suite файлу TestNG
+            suites 'src/test/resources/regression.xml'
         }
         if (project.hasProperty('browser')) {
             systemProperty 'browser', "${browser}" // Передача параметра browser
@@ -75,17 +72,15 @@ def registerTask(String taskName, String suitePath) {
 }
 
 // Регистрация тестовых задач
-registerTask('smoke', 'src/test/resources/smoke.xml')       // Smoke тесты
+//registerTask('smoke', 'src/test/resources/smoke.xml')       // Smoke тесты
 registerTask('regression', 'src/test/resources/regression.xml') // Regression тесты
-registerTask('accept', 'src/test/resources/accept.xml')     // Acceptance тесты
-registerTask('login', 'src/test/resources/login.xml')       // Login тесты
-*/
+//registerTask('accept', 'src/test/resources/accept.xml')     // Acceptance тесты
+//registerTask('login', 'src/test/resources/login.xml')       // Login тесты
 
-// Команда для проверки устаревших зависимостей:
 // gradle dependencyUpdates
 // Сгенерированный отчет покажет доступные обновления
 
-//gradle clean test -Dtestng.suiteXmlFiles=src/test/resources/registrationTests.xml
+//gradle clean test -Dtestng.suiteXmlFiles=src/test/resources/regression.xml
 
 
 // Пример использования команд:

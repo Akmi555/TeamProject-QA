@@ -1,0 +1,83 @@
+20:59:32.682 [Test worker] INFO  org.testng.internal.Utils -- [XmlSuite] [WARN] 'parallel' value 'false' is no longer valid, defaulting to 'none'.
+20:59:34.081 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+20:59:34.110 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+20:59:49.665 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+20:59:49.678 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:00:04.618 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:00:04.637 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:00:10.107 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:00:10.127 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:00:15.048 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:00:15.060 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:00:17.354 [Test worker] INFO  r.negativeTests.DuplicateEmailTests -- Тест: Регистрация с дублирующим email
+21:00:17.354 [Test worker] INFO  r.negativeTests.DuplicateEmailTests -- Тест: Регистрация с дублирующим email
+21:00:17.358 [Test worker] INFO  r.negativeTests.DuplicateEmailTests -- Переход на страницу регистрации
+21:00:17.358 [Test worker] INFO  r.negativeTests.DuplicateEmailTests -- Переход на страницу регистрации
+21:00:31.697 [Test worker] INFO  r.negativeTests.DuplicateEmailTests -- Закрытие браузера
+21:00:31.697 [Test worker] INFO  r.negativeTests.DuplicateEmailTests -- Закрытие браузера
+21:00:32.142 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:00:32.154 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:00:33.625 [Test worker] INFO  r.n.EmptyLastNameFieldsTests -- Тест: Регистрация с пустыми полями
+21:00:33.625 [Test worker] INFO  r.n.EmptyLastNameFieldsTests -- Тест: Регистрация с пустыми полями
+21:00:33.627 [Test worker] INFO  r.n.EmptyLastNameFieldsTests -- Переход на страницу регистрации
+21:00:33.627 [Test worker] INFO  r.n.EmptyLastNameFieldsTests -- Переход на страницу регистрации
+21:00:38.644 [Test worker] INFO  r.n.EmptyLastNameFieldsTests -- Сообщение об ошибке: Заполните это поле.
+21:00:38.644 [Test worker] INFO  r.n.EmptyLastNameFieldsTests -- Сообщение об ошибке: Заполните это поле.
+21:00:38.656 [Test worker] INFO  r.n.EmptyLastNameFieldsTests -- Закрытие браузера
+21:00:38.656 [Test worker] INFO  r.n.EmptyLastNameFieldsTests -- Закрытие браузера
+21:00:39.011 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:00:39.021 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:00:40.763 [Test worker] INFO  r.n.EmptyFirstNameFieldsTests -- Тест: Регистрация с пустыми полями
+21:00:40.763 [Test worker] INFO  r.n.EmptyFirstNameFieldsTests -- Тест: Регистрация с пустыми полями
+21:00:40.764 [Test worker] INFO  r.n.EmptyFirstNameFieldsTests -- Переход на страницу регистрации
+21:00:40.764 [Test worker] INFO  r.n.EmptyFirstNameFieldsTests -- Переход на страницу регистрации
+21:00:44.225 [Test worker] INFO  r.n.EmptyFirstNameFieldsTests -- Сообщение об ошибке: Заполните это поле.
+21:00:44.225 [Test worker] INFO  r.n.EmptyFirstNameFieldsTests -- Сообщение об ошибке: Заполните это поле.
+21:00:44.230 [Test worker] INFO  r.n.EmptyFirstNameFieldsTests -- Закрытие браузера
+21:00:44.230 [Test worker] INFO  r.n.EmptyFirstNameFieldsTests -- Закрытие браузера
+21:00:44.694 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:00:44.710 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:00:46.972 [Test worker] INFO  r.n.EmptyPasswordFieldsTests -- Тест: Регистрация с пустыми полями
+21:00:46.972 [Test worker] INFO  r.n.EmptyPasswordFieldsTests -- Тест: Регистрация с пустыми полями
+21:00:46.974 [Test worker] INFO  r.n.EmptyPasswordFieldsTests -- Переход на страницу регистрации
+21:00:46.974 [Test worker] INFO  r.n.EmptyPasswordFieldsTests -- Переход на страницу регистрации
+21:00:49.993 [Test worker] INFO  r.n.EmptyPasswordFieldsTests -- Сообщение об ошибке: Заполните это поле.
+21:00:49.993 [Test worker] INFO  r.n.EmptyPasswordFieldsTests -- Сообщение об ошибке: Заполните это поле.
+21:00:49.998 [Test worker] INFO  r.n.EmptyPasswordFieldsTests -- Закрытие браузера
+21:00:49.998 [Test worker] INFO  r.n.EmptyPasswordFieldsTests -- Закрытие браузера
+21:00:50.429 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:00:50.444 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:00:52.735 [Test worker] INFO  r.n.InvalidEmailRegistrationTests -- Тест: Регистрация с невалидным email и обработка браузерного предупреждения
+21:00:52.735 [Test worker] INFO  r.n.InvalidEmailRegistrationTests -- Тест: Регистрация с невалидным email и обработка браузерного предупреждения
+21:00:52.737 [Test worker] INFO  r.n.InvalidEmailRegistrationTests -- Переход на страницу регистрации
+21:00:52.737 [Test worker] INFO  r.n.InvalidEmailRegistrationTests -- Переход на страницу регистрации
+21:00:55.850 [Test worker] INFO  r.n.InvalidEmailRegistrationTests -- Сообщение браузера: Адрес электронной почты должен содержать символ "@". В адресе "invalid_email" отсутствует символ "@".
+21:00:55.850 [Test worker] INFO  r.n.InvalidEmailRegistrationTests -- Сообщение браузера: Адрес электронной почты должен содержать символ "@". В адресе "invalid_email" отсутствует символ "@".
+21:00:55.856 [Test worker] INFO  r.n.InvalidEmailRegistrationTests -- Закрытие браузера
+21:00:55.856 [Test worker] INFO  r.n.InvalidEmailRegistrationTests -- Закрытие браузера
+21:00:56.262 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:00:56.284 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:00:58.766 [Test worker] INFO  r.n.InvalidFirstNameRegistrationTests -- Тест: Регистрация с невалидным email и обработка браузерного предупреждения
+21:00:58.766 [Test worker] INFO  r.n.InvalidFirstNameRegistrationTests -- Тест: Регистрация с невалидным email и обработка браузерного предупреждения
+21:00:58.768 [Test worker] INFO  r.n.InvalidFirstNameRegistrationTests -- Переход на страницу регистрации
+21:00:58.768 [Test worker] INFO  r.n.InvalidFirstNameRegistrationTests -- Переход на страницу регистрации
+21:01:02.552 [Test worker] INFO  r.n.InvalidFirstNameRegistrationTests -- Закрытие браузера
+21:01:02.552 [Test worker] INFO  r.n.InvalidFirstNameRegistrationTests -- Закрытие браузера
+21:01:02.983 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:01:03.000 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:01:05.312 [Test worker] INFO  r.n.InvalidLastNameRegistrationTests -- Тест: Регистрация с невалидным email и обработка браузерного предупреждения
+21:01:05.312 [Test worker] INFO  r.n.InvalidLastNameRegistrationTests -- Тест: Регистрация с невалидным email и обработка браузерного предупреждения
+21:01:05.312 [Test worker] INFO  r.n.InvalidLastNameRegistrationTests -- Переход на страницу регистрации
+21:01:05.312 [Test worker] INFO  r.n.InvalidLastNameRegistrationTests -- Переход на страницу регистрации
+21:01:08.627 [Test worker] INFO  r.n.InvalidLastNameRegistrationTests -- Закрытие браузера
+21:01:08.627 [Test worker] INFO  r.n.InvalidLastNameRegistrationTests -- Закрытие браузера
+21:01:09.064 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:01:09.076 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
+21:01:11.474 [Test worker] INFO  r.n.InvalidPasswordRegistrationTests -- Тест: Регистрация с невалидным email и обработка браузерного предупреждения
+21:01:11.474 [Test worker] INFO  r.n.InvalidPasswordRegistrationTests -- Тест: Регистрация с невалидным email и обработка браузерного предупреждения
+21:01:11.476 [Test worker] INFO  r.n.InvalidPasswordRegistrationTests -- Переход на страницу регистрации
+21:01:11.476 [Test worker] INFO  r.n.InvalidPasswordRegistrationTests -- Переход на страницу регистрации
+21:01:14.595 [Test worker] INFO  r.n.InvalidPasswordRegistrationTests -- Закрытие браузера
+21:01:14.595 [Test worker] INFO  r.n.InvalidPasswordRegistrationTests -- Закрытие браузера
+21:01:14.998 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Using chromedriver 131.0.6778.108 (resolved driver for Chrome 131)
+21:01:15.011 [Test worker] INFO  i.g.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as C:\Users\ovash\.cache\selenium\chromedriver\win64\131.0.6778.108\chromedriver.exe
