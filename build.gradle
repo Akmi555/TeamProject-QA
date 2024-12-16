@@ -84,6 +84,9 @@ registerTask('login', 'src/test/resources/login.xml')       // Login тесты
 // gradle dependencyUpdates
 // Сгенерированный отчет покажет доступные обновления
 
+//gradle clean test -Dtestng.suiteXmlFiles=src/test/resources/registrationTests.xml
+
+
 // Пример использования команд:
 // gradle allureReport — Генерация отчета Allure
 // gradle allureServe  — Просмотр отчета Allure

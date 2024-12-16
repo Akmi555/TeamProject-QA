@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/TeamProject-QA.iml" filepath="$PROJECT_DIR$/.idea/TeamProject-QA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamProject-QA.main.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamProject-QA.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamProject-QA.test.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamProject-QA.test.iml" />
     </modules>
   </component>
