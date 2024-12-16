@@ -1,18 +1,41 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="RegistrationTests" parallel="false">
-    <test name="PositiveTests">
+<suite name="AllTests" parallel="false">
+
+    <!-- Тесты из папки authorization/negativeTests -->
+    <test name="Authorization Negative Tests">
         <classes>
-            <class name="registration.CreateAccountPositiveTests"/>
+            <class name="authorization.negativeTests.UserAuthorizationEmailNegativ" />
+            <class name="authorization.negativeTests.UserAuthorizationPasswordNegativ" />
         </classes>
     </test>
-    <test name="EmptyFieldsTests">
+
+    <!-- Тесты из папки authorization/positiveTests -->
+    <test name="Authorization Positive Tests">
         <classes>
-            <class name="registration.EmptyFieldsTests"/>
+            <class name="authorization.positiveTests.UserAuthorizationPositiv" />
+            <class name="authorization.positiveTests.UserAuthorizationVisibilityTogglePositiv" />
         </classes>
     </test>
-    <test name="DuplicateEmailTests">
+
+    <!-- Тесты из папки registration/negativeTests -->
+    <test name="Registration Negative Tests">
         <classes>
-            <class name="registration.DuplicateEmailTests"/>
+            <class name="registration.negativeTests.DuplicateEmailTests" />
+            <class name="registration.negativeTests.EmptyLastNameFieldsTests" />
+            <class name="registration.negativeTests.EmptyFirstNameFieldsTests" />
+            <class name="registration.negativeTests.EmptyPasswordFieldsTests" />
+            <class name="registration.negativeTests.InvalidEmailRegistrationTests" />
+            <class name="registration.negativeTests.InvalidFirstNameRegistrationTests" />
+            <class name="registration.negativeTests.InvalidLastNameRegistrationTests" />
+            <class name="registration.negativeTests.InvalidPasswordRegistrationTests" />
         </classes>
     </test>
+
+    <!-- Тесты из папки registration/positiveTests -->
+    <test name="Registration Positive Tests">
+        <classes>
+            <class name="registration.positiveTests.CreateAccountTests" />
+        </classes>
+    </test>
+
 </suite>
