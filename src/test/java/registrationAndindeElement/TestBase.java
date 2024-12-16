@@ -14,13 +14,13 @@ import java.time.Duration;
 import java.util.List;
 
 public class FindElementMain {
-    private WebDriver driver;
+    public WebDriver driver;
 
     @BeforeMethod
     public void setUp() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
-        driver.get("http://localhost:3000/registration");
+        driver.get("http://localhost:3000");
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().window().setPosition(new Point(2500, 0));
         driver.manage().window().maximize();
@@ -28,7 +28,7 @@ public class FindElementMain {
 
     @Test
     public void findElementsByTagName() {
-        WebElement findElementsByXpathFirstName = driver.findElement(new By.ByXPath("//*[@id='root']/div[1]/div[1]/form[1]/input[1]"));
+        WebElement findElementsByXpathFirstName = driver.findElement(new By.ByXPath("//button[.='Хочу тур']"));
         WebElement findElementByTagName = driver.findElement(By.tagName("h2"));
         System.out.println(findElementsByXpathFirstName.getText());
         WebElement driverElementIMG = driver.findElement(By.tagName("img"));
@@ -42,23 +42,30 @@ public class FindElementMain {
             System.out.println(element.getAttribute("href"));
             System.out.println(element.getText());
         }
-
     }
 
     @Test
-    public void testFindElementByLocator(){
-
-        driver.findElement(By.cssSelector("a.Header_personalAccount__mhUbr"));
-        driver.findElement(By.cssSelector("[type='email']"));
-        driver.findElement(By.cssSelector(".Footer_container__KCuy9"));
-        WebElement footerContactFind = driver.findElement(By.className("Footer_contactItem__Nl11I"));
+    public void testFindElementByLocator() {
+    driver.findElement(By.xpath("//*[.='КРИСТАЛЬНАЯ ЧИСТОТА НОМЕРОВ']"));
     }
 
     @Test
     public void FindElementByXpathBackCool() {
         driver.findElement(By.xpath("//*[.='Обратный звонок']"));
     }
+    @Test
+    public void siblingTests(){
+        driver.findElement(By.xpath("//a[.='ТУРЫ']"));
+    }
 
+    @Test
+    public void siblingTests2(){
+        driver.get("http://localhost:3000/tours");
+        driver.findElement(By.xpath("//*[@class='Header_headerBtnLink__Z3Rrs' and text()='Хочу тур']"));
+        driver.findElement(By.xpath("//body/div[@id='root']/div[2]/div[1]/div[1]/select[1]"));
+
+        //driver.findElement(By.xpath("//*[.='Рейтинг: по убыванию')]"));
+    }
 
     @AfterMethod(enabled = false)
     public void tearDown() {

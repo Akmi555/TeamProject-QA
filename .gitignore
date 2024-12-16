@@ -1,5 +1,21 @@
-# Ignore Gradle project-specific cache directory
-.gradle
 
-# Ignore Gradle build output directory
-build
+*
+
+!src/
+!build.gradle
+!settings.gradle
+!gradlew
+!gradlew.bat
+!BerlinTravelAgencyAllTestsAfterDeBUG.postman_collection.json
+!BerlinTravelAgencyTests.postman_test_run.json
+!BerlinTravelAgency.postman_environment.json
+!newman-report.html
+
+!test_logs/
+!test_screenshots/
+
+.gradle/
+build/
+out/
+.idea/
+allure-results/
