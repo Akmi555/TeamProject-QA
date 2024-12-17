@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "c22c1329-3142-4f7e-9d40-13059674e392",
-		"name": "BerlinTravelAgencyAllTestsAfterDeBUG",
+		"_postman_id": "e4161f27-bbf3-4d41-a04e-525f24332977",
+		"name": "BerlinTravelAgencyAllTestsAfterDeBUGAllTests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "37825421",
-		"_collection_link": "https://cohort47.postman.co/workspace/QA~9c35c612-014c-45fb-b58b-79b23a58a5b1/collection/37825421-c22c1329-3142-4f7e-9d40-13059674e392?action=share&source=collection_link&creator=37825421"
+		"_collection_link": "https://cohort47.postman.co/workspace/QA~9c35c612-014c-45fb-b58b-79b23a58a5b1/collection/37825421-e4161f27-bbf3-4d41-a04e-525f24332977?action=share&source=collection_link&creator=37825421"
 	},
 	"item": [
 		{
@@ -201,12 +201,64 @@
 							"response": []
 						},
 						{
-							"name": "admin authorization",
+							"name": "User authorization Copy",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
+											"// Сохраняем токен в окружении и выводим в консоль\r",
+											"var jsonData = pm.response.json(); // Загружаем JSON-ответ\r",
+											"pm.environment.set(\"token\", jsonData.token);\r",
+											"console.log(\"Access Token is: \", jsonData.token);\r",
+											"\r",
+											"// Тест на успешную авторизацию\r",
+											"pm.test(\"Успешная авторизация\", function () {\r",
+											"    // Проверяем статус ответа\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    // Проверяем, что токен присутствует и является строкой\r",
+											"    pm.expect(jsonData.token).to.exist.and.to.be.a(\"string\", \"Ответ должен содержать поле 'token' и оно должно быть строкой\");\r",
+											"\r",
+											"    // Проверяем формат токена\r",
+											"    const token = jsonData.token;\r",
+											"    pm.expect(token.split(\".\").length).to.eql(3, \"JWT-токен должен состоять из 3 частей\");\r",
+											"});\r",
+											"\r",
+											"// Тест на структуру и валидность JWT\r",
+											"pm.test(\"Проверка структуры JWT\", function () {\r",
+											"    const token = jsonData.token;\r",
+											"\r",
+											"    // Декодируем payload токена\r",
+											"    const base64Decode = (base64String) => Buffer.from(base64String, \"base64\").toString(\"utf-8\");\r",
+											"    const payload = JSON.parse(base64Decode(token.split(\".\")[1]));\r",
+											"\r",
+											"    console.log(\"JWT Payload:\", payload);\r",
+											"\r",
+											"    // Получаем email из переменной окружения\r",
+											"    const expectedEmail = pm.environment.get(\"userEmail\");\r",
+											"\r",
+											"    // Проверяем наличие обязательных полей\r",
+											"    pm.expect(payload).to.have.property(\"iat\"); // Проверяем наличие поля 'iat'\r",
+											"    pm.expect(payload).to.have.property(\"exp\"); // Проверяем наличие поля 'exp'\r",
+											"\r",
+											"    // Проверяем, что 'iat' и 'exp' являются числами\r",
+											"    pm.expect(payload.iat).to.be.a(\"number\", \"Поле 'iat' должно быть числом\");\r",
+											"    pm.expect(payload.exp).to.be.a(\"number\", \"Поле 'exp' должно быть числом\");\r",
+											"\r",
+											"    // Проверяем, что токен не истёк\r",
+											"    const currentTime = Math.floor(Date.now() / 1000);\r",
+											"    pm.expect(payload.exp).to.be.above(currentTime, \"Поле 'exp' должно быть больше текущего времени\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response time is less than 1000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+											"});\r",
+											"\r",
 											""
 										],
 										"type": "text/javascript",
@@ -217,10 +269,97 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
+											"const requestBody = pm.request.body.raw;\r",
+											"const parsedBody = JSON.parse(requestBody);\r",
+											"pm.environment.set(\"userEmail\", parsedBody.userEmail);\r",
+											"console.log(\"Email, установленный для теста:\", parsedBody.userEmail);\r",
 											""
 										],
 										"type": "text/javascript",
 										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"ovasqah@gmail.com\",\r\n    \"password\": \"Qwesrtyuiop1!\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/auth",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"auth"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin authorization",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has the required Content-Type header\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Token is a non-empty string\", function () {",
+											"  const responseData = pm.response.json();",
+											"  pm.expect(responseData.token).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Token should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Token is in a valid format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.token).to.be.a('string').and.to.match(/[A-Za-z0-9-_]+/);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"  pm.expect(pm.response.responseTime).to.be.below(500);",
+											"});"
+										],
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -383,7 +522,7 @@
 							"name": "Chek Roll Admin",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -393,13 +532,48 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Content type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has the required fields\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData).to.have.property('id');",
+											"  pm.expect(responseData).to.have.property('firstName');",
+											"  pm.expect(responseData).to.have.property('lastName');",
+											"  pm.expect(responseData).to.have.property('email');",
+											"  pm.expect(responseData).to.have.property('role');",
+											"});",
+											"",
+											"",
+											"pm.test(\"Email is in a valid format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email should be in a valid format\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Id is a non-negative integer\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.id).to.be.a('number').and.to.be.at.least(0);",
+											"});"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -833,7 +1007,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\": \"Best country\"\r\n}",
+							"raw": "{\r\n    \"description\": \"The best new hotel in the city\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1079,6 +1253,48 @@
 			"item": [
 				{
 					"name": "admin all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('Response has the required fields - id, firstName, lastName, email, and role', function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function (user) {",
+									"        pm.expect(user).to.have.property('id');",
+									"        pm.expect(user).to.have.property('firstName');",
+									"        pm.expect(user).to.have.property('lastName');",
+									"        pm.expect(user).to.have.property('email');",
+									"        pm.expect(user).to.have.property('role');",
+									"    });",
+									"})",
+									"",
+									"pm.test('Verify the response content type is application/json', function () {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"})",
+									"",
+									"pm.test('Id, firstName, lastName, and role are non-empty strings', function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(function (user) {",
+									"        pm.expect(user.id).to.be.a('number', 'Id should be a number');",
+									"        pm.expect(user.firstName).to.be.a('string', 'First name should be a string');",
+									"        pm.expect(user.firstName).to.have.lengthOf.at.least(1, 'First name should not be empty');",
+									"        pm.expect(user.lastName).to.be.a('string', 'Last name should be a string');",
+									"        pm.expect(user.lastName).to.have.lengthOf.at.least(1, 'Last name should not be empty');",
+									"        pm.expect(user.role).to.be.a('string', 'Role should be a string');",
+									"        pm.expect(user.role).to.have.lengthOf.at.least(1, 'Role should not be empty');",
+									"    });",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -1144,27 +1360,6 @@
 									"    }\r",
 									"});\r",
 									"\r",
-									"// Проверка состояния пользователя после бана\r",
-									"const userId = pm.environment.get(\"userId\"); // Убедитесь, что userId определён в окружении\r",
-									"if (userId) {\r",
-									"    pm.sendRequest({\r",
-									"        url: `${pm.environment.get(\"base_url\")}/api/admin/users/${userId}`,\r",
-									"        method: \"GET\",\r",
-									"        headers: { \"Authorization\": `Bearer ${pm.environment.get(\"tokenAdmin\")}` }\r",
-									"    }, function (err, res) {\r",
-									"        pm.test(\"Пользователь заблокирован\", function () {\r",
-									"            const responseBody = res.json();\r",
-									"            if (responseBody && responseBody.hasOwnProperty(\"isBanned\")) {\r",
-									"                pm.expect(responseBody.isBanned).to.eql(true, \"Пользователь должен быть заблокирован\");\r",
-									"            } else {\r",
-									"                console.log(\"Свойство 'isBanned' отсутствует в ответе сервера\");\r",
-									"            }\r",
-									"        });\r",
-									"    });\r",
-									"} else {\r",
-									"    console.log(\"userId не задан в окружении. Пропускаем проверку блокировки пользователя\");\r",
-									"}\r",
-									"\r",
 									"// Логирование ответа сервера для отладки\r",
 									"console.log(\"Ответ сервера:\", pm.response.json());\r",
 									""
@@ -1211,6 +1406,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"url": {
@@ -1235,6 +1440,52 @@
 				},
 				{
 					"name": "admin ID user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('id');",
+									"  pm.expect(responseData).to.have.property('firstName');",
+									"  pm.expect(responseData).to.have.property('lastName');",
+									"  pm.expect(responseData).to.have.property('email');",
+									"  pm.expect(responseData).to.have.property('role');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.email).to.be.a('string').and.to.match(/^[\\w-]+@([\\w-]+\\.)+[\\w-]+$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"First name and last name must be non-empty strings\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.firstName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"First name should not be empty\");",
+									"  pm.expect(responseData.lastName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Last name should not be empty\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -1245,14 +1496,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/users/6",
+							"raw": "{{base_url}}/api/users/66",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"users",
-								"6"
+								"66"
 							]
 						}
 					},
@@ -1302,7 +1553,7 @@
 							"name": "tours?price=1000",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1312,13 +1563,39 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.include.all.keys('id', 'title', 'description', 'price', 'duration', 'startDate', 'endDate', 'state', 'country', 'city', 'photoLinks');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative integer', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number').and.to.satisfy(price => price >= 0, 'Price must be a non-negative integer');",
+											"    });",
+											"})",
+											"",
+											"pm.test('StartDate and endDate are in a valid date format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1370,7 +1647,7 @@
 							"name": "tours?country=Germany",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1380,13 +1657,68 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Content-Type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Validate the tour object\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+											"  ",
+											"  responseData.forEach(function(tour) {",
+											"    pm.expect(tour).to.be.an('object');",
+											"    pm.expect(tour).to.have.property('id').that.is.a('number');",
+											"    pm.expect(tour).to.have.property('title').that.is.a('string');",
+											"    pm.expect(tour).to.have.property('description').that.is.a('string');",
+											"    pm.expect(tour).to.have.property('price').that.is.a('number');",
+											"    pm.expect(tour).to.have.property('duration').that.is.a('number');",
+											"    pm.expect(tour).to.have.property('startDate').that.is.a('string');",
+											"    pm.expect(tour).to.have.property('endDate').that.is.a('string');",
+											"    pm.expect(tour).to.have.property('state').that.is.a('string');",
+											"    pm.expect(tour).to.have.property('country').that.is.a('string');",
+											"    pm.expect(tour).to.have.property('city').that.is.a('string');",
+											"    pm.expect(tour).to.have.property('photoLinks').that.is.an('array');",
+											"  });",
+											"});",
+											"",
+											"",
+											"pm.test(\"Title is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    responseData.forEach(function(tour) {",
+											"        pm.expect(tour.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+											"    });",
+											"});",
+											"",
+											"",
+											"pm.test(\"Price, duration, start date, end date, state, country, and city are present and have valid formats\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+											"",
+											"    responseData.forEach(function(tour) {",
+											"        pm.expect(tour).to.have.property('price').that.is.a('number');",
+											"        pm.expect(tour).to.have.property('duration').that.is.a('number');",
+											"        pm.expect(tour).to.have.property('startDate').that.is.a('string').and.to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour).to.have.property('endDate').that.is.a('string').and.to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour).to.have.property('state').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('country').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('city').that.is.a('string');",
+											"    });",
+											"});"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1426,7 +1758,7 @@
 							"name": "tours?city=Berlin",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1436,13 +1768,37 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.include.all.keys('id', 'title', 'description', 'price', 'duration', 'startDate', 'endDate', 'state', 'country', 'city', 'photoLinks');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Title is a non-empty string', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.title).to.be.a('string').and.to.have.lengthOf.at.least(1, 'Title should not be empty');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a positive number', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.above(0);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1482,7 +1838,7 @@
 							"name": "minPrice=100&maxPrice=500",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1492,13 +1848,49 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+											"    responseData.forEach(tour => {",
+											"        pm.expect(tour).to.have.property('id').that.is.a('number');",
+											"        pm.expect(tour).to.have.property('title').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('description').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('price').that.is.a('number');",
+											"        pm.expect(tour).to.have.property('duration').that.is.a('number');",
+											"        pm.expect(tour).to.have.property('startDate').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('endDate').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('state').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('country').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('city').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('photoLinks').that.is.an('array');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative integer', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (item) {",
+											"        pm.expect(item.price).to.be.a('number').and.to.be.at.least(0);",
+											"    });",
+											"})",
+											"",
+											"pm.test('StartDate and endDate are in a valid date format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1542,7 +1934,7 @@
 							"name": "startDate=2024-12-09",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1552,13 +1944,39 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.include.all.keys('id', 'title', 'description', 'price', 'duration', 'startDate', 'endDate', 'state', 'country', 'city', 'photoLinks');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative number', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number').and.to.be.at.least(0);",
+											"    });",
+											"})",
+											"",
+											"pm.test('StartDate and endDate are in a valid date format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1598,7 +2016,7 @@
 							"name": "endDate=2024-12-31",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1608,13 +2026,41 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.be.an('object');",
+											"        pm.expect(tour).to.include.all.keys('id', 'title', 'description', 'price', 'duration', 'startDate', 'endDate', 'state', 'country', 'city', 'photoLinks');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative integer', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number');",
+											"        pm.expect(tour.price).to.be.at.least(0);",
+											"    });",
+											"})",
+											"",
+											"pm.test('Start date and end date are in a valid date format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1658,7 +2104,7 @@
 							"name": "state=AVAILABLE",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1668,13 +2114,46 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"})",
+											"",
+											"pm.test('Content-Type header is application/json', function () {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+											"})",
+											"",
+											"pm.test('Validate the tour object', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.be.an('object');",
+											"        pm.expect(tour).to.have.property('id').that.is.a('number');",
+											"        pm.expect(tour).to.have.property('title').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('description').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('price').that.is.a('number');",
+											"        pm.expect(tour).to.have.property('duration').that.is.a('number');",
+											"        pm.expect(tour).to.have.property('startDate').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('endDate').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('state').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('country').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('city').that.is.a('string');",
+											"        pm.expect(tour).to.have.property('photoLinks').that.is.an('array');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative integer', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number').and.to.satisfy(price => price >= 0, 'Price must be a non-negative integer');",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1714,7 +2193,7 @@
 							"name": "minPrice=100&maxPrice=500",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1724,13 +2203,42 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response Content-Type is application/json', function () {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+											"})",
+											"",
+											"pm.test('Validate the tour object', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.be.an('object');",
+											"        pm.expect(tour.id).to.be.a('number');",
+											"        pm.expect(tour.title).to.be.a('string');",
+											"        pm.expect(tour.description).to.be.a('string');",
+											"        pm.expect(tour.price).to.be.a('number');",
+											"        pm.expect(tour.duration).to.be.a('number');",
+											"        pm.expect(tour.startDate).to.be.a('string');",
+											"        pm.expect(tour.endDate).to.be.a('string');",
+											"        pm.expect(tour.state).to.be.a('string');",
+											"        pm.expect(tour.country).to.be.a('string');",
+											"        pm.expect(tour.city).to.be.a('string');",
+											"        pm.expect(tour.photoLinks).to.be.an('array');",
+											"    });",
+											"})",
+											"",
+											"pm.test('StartDate and EndDate are in a valid date format', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1778,7 +2286,7 @@
 							"name": "Date=2024-12-09&state=AVAILABLE",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1788,13 +2296,39 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.include.all.keys('id', 'title', 'description', 'price', 'duration', 'startDate', 'endDate', 'state', 'country', 'city', 'photoLinks');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative number', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number').and.to.be.at.least(0);",
+											"    });",
+											"})",
+											"",
+											"pm.test('Start date and end date are in a valid date format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1838,7 +2372,7 @@
 							"name": "page=1&size=10",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1848,13 +2382,38 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+											"    responseData.forEach(function (item) {",
+											"        pm.expect(item).to.include.all.keys('id', 'title', 'description', 'price', 'duration', 'startDate', 'endDate', 'state', 'country', 'city', 'photoLinks');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative number', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number').and.to.be.at.least(0);",
+											"    });",
+											"})",
+											"",
+											"pm.test('StartDate and EndDate are in a valid date format', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1898,7 +2457,7 @@
 							"name": "sort=price,asc",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1908,13 +2467,49 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.have.property('id');",
+											"        pm.expect(tour).to.have.property('title');",
+											"        pm.expect(tour).to.have.property('description');",
+											"        pm.expect(tour).to.have.property('price');",
+											"        pm.expect(tour).to.have.property('duration');",
+											"        pm.expect(tour).to.have.property('startDate');",
+											"        pm.expect(tour).to.have.property('endDate');",
+											"        pm.expect(tour).to.have.property('state');",
+											"        pm.expect(tour).to.have.property('country');",
+											"        pm.expect(tour).to.have.property('city');",
+											"        pm.expect(tour).to.have.property('photoLinks');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative number', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number').and.to.be.at.least(0);",
+											"    });",
+											"})",
+											"",
+											"pm.test('StartDate and endDate are in a valid date format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1954,7 +2549,7 @@
 							"name": "minDuration=5&maxDuration=10",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -1964,13 +2559,39 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (item) {",
+											"        pm.expect(item).to.be.an('object');",
+											"        pm.expect(item).to.include.all.keys('id', 'title', 'description', 'price', 'duration', 'startDate', 'endDate', 'state', 'country', 'city', 'photoLinks');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative number', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number').and.to.be.at.least(0);",
+											"    });",
+											"})",
+											"",
+											"pm.test('Duration is a positive integer', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.duration).to.be.a('number').and.to.be.at.least(0, 'Duration should be a positive integer');",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -2014,7 +2635,7 @@
 							"name": "search=Dream",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -2024,13 +2645,48 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response has the required fields', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.have.property('id');",
+											"        pm.expect(tour).to.have.property('title');",
+											"        pm.expect(tour).to.have.property('description');",
+											"        pm.expect(tour).to.have.property('price');",
+											"        pm.expect(tour).to.have.property('duration');",
+											"        pm.expect(tour).to.have.property('startDate');",
+											"        pm.expect(tour).to.have.property('endDate');",
+											"        pm.expect(tour).to.have.property('state');",
+											"        pm.expect(tour).to.have.property('country');",
+											"        pm.expect(tour).to.have.property('city');",
+											"        pm.expect(tour).to.have.property('photoLinks');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative number', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number').and.to.be.at.least(0);",
+											"    });",
+											"})",
+											"",
+											"pm.test('Start date and end date are in a valid date format', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"        pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -2075,7 +2731,7 @@
 							"name": "Несуществующий фильтр",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -2085,13 +2741,45 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test('Response status code is 200', function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"})",
+											"",
+											"pm.test('Response content type is application/json', function () {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+											"})",
+											"",
+											"pm.test('Validate the tour object', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour).to.be.an('object');",
+											"        pm.expect(tour.id).to.be.a('number');",
+											"        pm.expect(tour.title).to.be.a('string');",
+											"        pm.expect(tour.description).to.be.a('string');",
+											"        pm.expect(tour.price).to.be.a('number');",
+											"        pm.expect(tour.duration).to.be.a('number');",
+											"        pm.expect(tour.startDate).to.be.a('string');",
+											"        pm.expect(tour.endDate).to.be.a('string');",
+											"        pm.expect(tour.state).to.be.a('string');",
+											"        pm.expect(tour.country).to.be.a('string');",
+											"        pm.expect(tour.city).to.be.a('string');",
+											"        pm.expect(tour.photoLinks).to.be.an('array');",
+											"    });",
+											"})",
+											"",
+											"pm.test('Price is a non-negative integer', function () {",
+											"    const responseData = pm.response.json();",
+											"    responseData.forEach(function (tour) {",
+											"        pm.expect(tour.price).to.be.a('number').and.to.be.at.least(0);",
+											"    });",
+											"})"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -2131,7 +2819,7 @@
 							"name": "Пересекающиеся фильтры",
 							"event": [
 								{
-									"listen": "test",
+									"listen": "prerequest",
 									"script": {
 										"exec": [
 											""
@@ -2141,13 +2829,68 @@
 									}
 								},
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"",
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has the required fields\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function(tour) {",
+											"        pm.expect(tour).to.have.property('id');",
+											"        pm.expect(tour).to.have.property('title');",
+											"        pm.expect(tour).to.have.property('description');",
+											"        pm.expect(tour).to.have.property('price');",
+											"        pm.expect(tour).to.have.property('duration');",
+											"        pm.expect(tour).to.have.property('startDate');",
+											"        pm.expect(tour).to.have.property('endDate');",
+											"        pm.expect(tour).to.have.property('state');",
+											"        pm.expect(tour).to.have.property('country');",
+											"        pm.expect(tour).to.have.property('city');",
+											"        pm.expect(tour).to.have.property('photoLinks');",
+											"    });",
+											"});",
+											"",
+											"",
+											"pm.test(\"Price is a non-negative number\", function () {",
+											"  const responseData = pm.response.json();",
+											"",
+											"  responseData.forEach(function(tour) {",
+											"    pm.expect(tour.price).to.be.a('number').and.to.be.at.least(0);",
+											"  });",
+											"});",
+											"",
+											"",
+											"pm.test(\"Duration is a positive integer\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('array');",
+											"  ",
+											"  responseData.forEach(function(tour) {",
+											"    pm.expect(tour.duration).to.be.a('number');",
+											"    pm.expect(tour.duration).to.be.above(0);",
+											"  });",
+											"});",
+											"",
+											"",
+											"pm.test(\"Start date and end date are in valid date format\", function () {",
+											"  const responseData = pm.response.json();",
+											"",
+											"  pm.expect(responseData).to.be.an('array');",
+											"  ",
+											"  responseData.forEach(function(tour) {",
+											"    pm.expect(tour.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(tour.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"  });",
+											"});"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -2188,6 +2931,449 @@
 							"response": []
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "user booking",
+			"item": [
+				{
+					"name": "Bookinged user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"User object should exist and have required properties\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.user).to.exist.and.to.be.an('object');",
+									"  pm.expect(responseData.user.id).to.exist.and.to.be.a('number');",
+									"  pm.expect(responseData.user.firstName).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.user.lastName).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.user.email).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.user.role).to.exist.and.to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tour object is present and contains expected fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.have.property('tour').that.is.an('object');",
+									"    pm.expect(responseData.tour).to.include.all.keys('id', 'title', 'description', 'price', 'duration', 'startDate', 'endDate', 'state', 'country', 'city', 'photoLinks');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Booking date is in a valid format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.bookingDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/bookings/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bookings",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Bookinged user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the user object\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData.user).to.exist;",
+									"  pm.expect(responseData.user).to.be.an('object');",
+									"  pm.expect(responseData.user.id).to.exist.and.to.be.a('number');",
+									"  pm.expect(responseData.user.firstName).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.user.lastName).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.user.email).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.user.role).to.exist.and.to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the tour object\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.tour).to.exist;",
+									"    pm.expect(responseData.tour).to.be.an('object');",
+									"    pm.expect(responseData.tour.id).to.exist.and.to.be.a('number');",
+									"    pm.expect(responseData.tour.title).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.tour.description).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.tour.price).to.exist.and.to.be.a('number');",
+									"    pm.expect(responseData.tour.duration).to.exist.and.to.be.a('number');",
+									"    pm.expect(responseData.tour.startDate).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.tour.endDate).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.tour.state).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.tour.country).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.tour.city).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.tour.photoLinks).to.exist.and.to.be.an('array');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Booking date is in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.bookingDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvdmFzcWFoQGdtYWlsLmNvbSIsImlhdCI6MTczNDQ3NDI0NSwiZXhwIjoxNzM1NDc0MjQ1fQ.pc71QG3FpbuDTLuZQ2oHUfVcJmBtDNPQN0gknPeELSM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tourId\": 15,\r\n    \"tourDate\": \"2024-12-28\",\r\n    \"amountOfPeople\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Bookinged user auto test",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Создание случайного пользователя\r",
+									"const randomNumber = Math.floor(Math.random() * 10000);\r",
+									"pm.environment.set(\"userFirstName\", `User${randomNumber}`);\r",
+									"pm.environment.set(\"userLastName\", `Test${randomNumber}`);\r",
+									"pm.environment.set(\"email\", `email${randomNumber}@gmail.com`);\r",
+									"pm.environment.set(\"password\", `password${randomNumber}A@`);\r",
+									"\r",
+									"// Получение случайного tourId (от 1 до 145)\r",
+									"const randomTourId = Math.floor(Math.random() * 145) + 1;\r",
+									"pm.environment.set(\"tourId\", randomTourId);\r",
+									"\r",
+									"// Выбор случайной даты для тура (завтра или позже)\r",
+									"const today = new Date();\r",
+									"today.setDate(today.getDate() + 1); // Завтра\r",
+									"const randomDayOffset = Math.floor(Math.random() * 30); // Случайная дата в будущем\r",
+									"const bookingDate = new Date(today.getTime() + randomDayOffset * 24 * 60 * 60 * 1000); // добавление случайных дней\r",
+									"const formattedBookingDate = `${bookingDate.getFullYear()}-${(bookingDate.getMonth() + 1).toString().padStart(2, '0')}-${bookingDate.getDate().toString().padStart(2, '0')}`;\r",
+									"pm.environment.set(\"tourDate\", formattedBookingDate);\r",
+									"\r",
+									"// Случайное количество людей (от 1 до 10)\r",
+									"const randomPeopleCount = Math.floor(Math.random() * 10) + 1;\r",
+									"pm.environment.set(\"amountOfPeople\", randomPeopleCount);\r",
+									"\r",
+									"// Шаг 1: Регистрация нового пользователя\r",
+									"pm.sendRequest({\r",
+									"    url: `${pm.environment.get(\"base_url\")}/api/public/register`,\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json'\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify({\r",
+									"            firstName: pm.environment.get(\"userFirstName\"),\r",
+									"            lastName: pm.environment.get(\"userLastName\"),\r",
+									"            email: pm.environment.get(\"email\"),\r",
+									"            password: pm.environment.get(\"password\")\r",
+									"        })\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    // Шаг 2: Авторизация пользователя\r",
+									"    pm.sendRequest({\r",
+									"        url: `${pm.environment.get(\"base_url\")}/api/auth`,\r",
+									"        method: 'POST',\r",
+									"        header: {\r",
+									"            'Content-Type': 'application/json'\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: 'raw',\r",
+									"            raw: JSON.stringify({\r",
+									"                email: pm.environment.get(\"email\"),\r",
+									"                password: pm.environment.get(\"password\")\r",
+									"            })\r",
+									"        }\r",
+									"    }, function (err, res) {\r",
+									"        if (err) {\r",
+									"            console.log(\"Ошибка при авторизации: \", err);\r",
+									"            return;\r",
+									"        }\r",
+									"\r",
+									"        // Сохраняем токен для последующих запросов\r",
+									"        const jsonData = res.json();\r",
+									"        pm.environment.set(\"tokenUser\", jsonData.token);\r",
+									"        console.log(\"Token User: \", jsonData.token);\r",
+									"\r",
+									"        // Шаг 3: Создание бронирования с рандомными данными\r",
+									"        pm.sendRequest({\r",
+									"            url: `${pm.environment.get(\"base_url\")}/api/bookings`,\r",
+									"            method: 'POST',\r",
+									"            header: {\r",
+									"                'Authorization': `Bearer ${pm.environment.get(\"tokenUser\")}`,\r",
+									"                'Content-Type': 'application/json'\r",
+									"            },\r",
+									"            body: {\r",
+									"                mode: 'raw',\r",
+									"                raw: JSON.stringify({\r",
+									"                    tourId: pm.environment.get(\"tourId\"),\r",
+									"                    tourDate: pm.environment.get(\"tourDate\"),\r",
+									"                    amountOfPeople: pm.environment.get(\"amountOfPeople\")\r",
+									"                })\r",
+									"            },\r",
+									"            function (err, res) {\r",
+									"                if (err) {\r",
+									"                    console.log(\"Ошибка при создании бронирования: \", err);\r",
+									"                    return;\r",
+									"                }\r",
+									"                console.log(\"Booking created successfully:\", res.json());\r",
+									"            }\r",
+									"        });\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Тест на успешное бронирование\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 2000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+									"});\r",
+									"\r",
+									"// Проверяем структуру ответа\r",
+									"pm.test(\"Проверка данных бронирования\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"\r",
+									"    // Проверяем, что все ключи присутствуют\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData).to.have.property(\"user\");\r",
+									"    pm.expect(jsonData).to.have.property(\"tour\");\r",
+									"    pm.expect(jsonData).to.have.property(\"tourDate\");\r",
+									"    pm.expect(jsonData).to.have.property(\"amountOfPeople\");\r",
+									"    pm.expect(jsonData).to.have.property(\"state\");\r",
+									"\r",
+									"    // Проверяем правильность данных пользователя\r",
+									"    pm.expect(jsonData.user.firstName).to.eql(pm.environment.get(\"userFirstName\"));\r",
+									"    pm.expect(jsonData.user.lastName).to.eql(pm.environment.get(\"userLastName\"));\r",
+									"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"email\"));\r",
+									"\r",
+									"    // Проверяем правильность данных тура\r",
+									"    pm.expect(jsonData.tour.id).to.eql(pm.environment.get(\"tourId\"));\r",
+									"    pm.expect(jsonData.tour.title).to.exist;\r",
+									"    pm.expect(jsonData.tour.price).to.exist;\r",
+									"\r",
+									"    // Проверяем правильность даты\r",
+									"    pm.expect(jsonData.tourDate).to.eql(pm.environment.get(\"tourDate\"));\r",
+									"\r",
+									"    // Проверяем количество людей\r",
+									"    pm.expect(jsonData.amountOfPeople).to.eql(pm.environment.get(\"amountOfPeople\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tourId\": {{tourId}},\r\n    \"tourDate\": \"{{tourDate}}\",\r\n    \"amountOfPeople\": {{amountOfPeople}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{tokenAdmin}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"// URL для авторизации\r",
+							"const authUrl = pm.environment.get(\"authUrl\") || \"{{base_url}}api/auth\";\r",
+							"\r",
+							"// Проверяем, нужно ли обновить токен\r",
+							"const tokenExpiry = pm.environment.get(\"tokenExpiry\");\r",
+							"const currentTime = Math.floor(Date.now() / 1000);\r",
+							"\r",
+							"if (!tokenExpiry || currentTime >= tokenExpiry) {\r",
+							"    console.log(\"Токен истёк или отсутствует. Получаем новый токен...\");\r",
+							"\r",
+							"    // Данные для авторизации\r",
+							"    const userEmail = pm.environment.get(\"userEmail\") || \"testadmin@gmail.com\";\r",
+							"    const userPassword = pm.environment.get(\"userPassword\") || \"admin\";\r",
+							"\r",
+							"    pm.sendRequest({\r",
+							"        url: authUrl,\r",
+							"        method: \"POST\",\r",
+							"        header: {\r",
+							"            \"Content-Type\": \"application/json\"\r",
+							"        },\r",
+							"        body: {\r",
+							"            mode: \"raw\",\r",
+							"            raw: JSON.stringify({\r",
+							"                userEmail: userEmail,\r",
+							"                password: userPassword\r",
+							"            })\r",
+							"        }\r",
+							"    }, function (err, response) {\r",
+							"        if (err) {\r",
+							"            console.error(\"Ошибка при получении токена:\", err);\r",
+							"            return;\r",
+							"        }\r",
+							"\r",
+							"        if (response.code === 200) {\r",
+							"            const jsonData = response.json();\r",
+							"\r",
+							"            // Сохраняем новый токен\r",
+							"            pm.environment.set(\"tokenAdmin\", jsonData.token);\r",
+							"\r",
+							"            // Декодируем payload токена для получения времени истечения\r",
+							"            const base64Decode = (base64String) => Buffer.from(base64String, \"base64\").toString(\"utf-8\");\r",
+							"            const payload = JSON.parse(base64Decode(jsonData.token.split(\".\")[1]));\r",
+							"            pm.environment.set(\"tokenExpiry\", payload.exp);\r",
+							"\r",
+							"            console.log(\"Новый токен сохранён:\", jsonData.token);\r",
+							"        } else {\r",
+							"            console.error(\"Не удалось обновить токен. Статус:\", response.code);\r",
+							"        }\r",
+							"    });\r",
+							"} else {\r",
+							"    console.log(\"Токен действителен:\", pm.environment.get(\"tokenAdmin\"));\r",
+							"}\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		}

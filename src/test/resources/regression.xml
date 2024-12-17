@@ -1,13 +1,13 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="AllTests" parallel="false">
 
-<!--    &lt;!&ndash; Тесты из папки authorization/negativeTests &ndash;&gt;-->
-<!--    <test name="Authorization Negative Tests">-->
-<!--        <classes>-->
-<!--            <class name="authorization.negativeTests.UserAuthorizationEmailNegativ" />-->
-<!--            <class name="authorization.negativeTests.UserAuthorizationPasswordNegativ" />-->
-<!--        </classes>-->
-<!--    </test>-->
+    <!-- Тесты из папки authorization/negativeTests -->
+    <test name="Authorization Negative Tests">
+        <classes>
+            <class name="authorization.negativeTests.UserAuthorizationEmailNegativ" />
+            <class name="authorization.negativeTests.UserAuthorizationPasswordNegativ" />
+        </classes>
+    </test>
 
     <!-- Тесты из папки authorization/positiveTests -->
     <test name="Authorization Positive Tests">
@@ -19,10 +19,8 @@
 
     <!-- Тесты из папки registration/negativeTests -->
     <test name="Registration Negative Tests">
-<!--        <classes>-->
-<!--            <class name="registration.negativeTests.DuplicateEmailTests" />-->
-<!--        </classes>-->
         <classes>
+            <class name="registration.negativeTests.DuplicateEmailTests" />
             <class name="registration.negativeTests.EmptyLastNameFieldsTests" />
             <class name="registration.negativeTests.EmptyFirstNameFieldsTests" />
             <class name="registration.negativeTests.EmptyPasswordFieldsTests" />
