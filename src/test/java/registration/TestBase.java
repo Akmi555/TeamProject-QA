@@ -19,7 +19,7 @@ public class TestBase {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.get("https://lionfish-app-3k7kf.ondigitalocean.app/");
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         driver.manage().window().setPosition(new Point(2500, 0));
         driver.manage().window().maximize();
     }
