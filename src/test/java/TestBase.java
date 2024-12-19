@@ -1,7 +1,4 @@
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -9,6 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import java.time.Duration;
+import java.util.List;
 
 public class TestBase {
     public WebDriver driver;
@@ -110,5 +108,46 @@ public class TestBase {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    protected boolean isContactAdded(String textToFind) {
+        List<WebElement> contacts = driver.findElements(By.xpath("//a[contains(text(),'Назад')]"));
+        for (WebElement element : contacts) {
+            if (element.getText().contains(textToFind)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected void addNewContactPositiveData(String name) {
+        clickAddLink();
+        fillInNewContactForm(
+                "Vitalievna",
+                "Milana",
+                "milanaed@gmail.com");
+        clickSaveContact();
+
+    }
+
+    private void clickSaveContact() {
+        click(By.xpath("//button[.='Сохранить']"));
+        click(By.xpath("//a[.='Назад']"));
+    }
+
+    private void clickAddLink() {
+        click(By.className("AccountManagement_editButton__JuMEZ"));
+        click(By.xpath("//button[.='Изменить']"));
+    }
+
+    private void fillInNewContactForm(String firstName, String lastName, String email) {
+        click(By.xpath("//tbody/tr[1]/td[1]/input[1]"));
+        type((By.xpath("//tbody/tr[1]/td[1]/input[1]")), firstName);
+
+        click(By.xpath("//table[@class='AccountDetails_table__TnerJ']"));
+        type((By.xpath("//tbody/tr[2]/td[1]/input[1]")), lastName);
+
+        click(By.xpath("//tbody/tr[3]/td[1]/input[1]"));
+        type((By.xpath("//tbody/tr[3]/td[1]/input[1]")), email);
     }
 }
