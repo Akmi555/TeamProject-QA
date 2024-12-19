@@ -6,6 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 public class TestBase {
@@ -149,5 +150,18 @@ public class TestBase {
 
         click(By.xpath("//tbody/tr[3]/td[1]/input[1]"));
         type((By.xpath("//tbody/tr[3]/td[1]/input[1]")), email);
+    }
+
+    protected void eddFildFirstName() {
+        login("admintrue@gmail.de", "Qwertyui1!");
+        click(By.className("AccountManagement_editButton__JuMEZ"));
+        click(By.xpath("//button[.='Изменить']"));
+        driver.findElement(By.xpath("//tbody/tr[1]/td[1]/input[1]")).clear();
+        click(By.xpath("//button[.='Сохранить']"));
+        click(By.xpath("//a[.='Назад']"));
+    }
+    protected String generateEmail(String baseEmail) {
+        long timestamp = Instant.now().toEpochMilli();
+        return baseEmail.replace("@", "+" + timestamp + "@");
     }
 }

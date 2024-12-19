@@ -1,6 +1,5 @@
 import io.qameta.allure.testng.Tag;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -20,8 +19,5 @@ public class AddPersonalData extends TestBase {
         Assert.assertTrue(isContactAdded(CONTACT_NAME), "Contact was not added successfully.");
     }
 
-//    @AfterMethod
-//    public void postCondition() {
-//        deleteOneContactFild(CONTACT_NAME);
-//    }
+
 }

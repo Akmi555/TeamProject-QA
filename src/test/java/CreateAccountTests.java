@@ -10,25 +10,14 @@ public class CreateAccountTests extends TestBase {
         clickLoginLink();
         clickRegistrationButton();
 
-        fillInRegistrationForm("Vikla", "Viktorovich", "or121rrrovishnik@gmail.de", "Qwertyui1!");
+        String email = generateEmail("user@gmail.de");
+        fillInRegistrationForm("Vikla", "Viktorovich", email, "Qwertyui1!");
         click(By.xpath("//button[.='Зарегистрироваться']"));
 
-        type(By.className("login_input__CsLCQ"), "or121rrrovishnik@gmail.de");
+        type(By.className("login_input__CsLCQ"), email);
         type(By.name("password"), "Qwertyui1!");
         click(By.xpath("//button[.='Войти']"));
         Assert.assertTrue(isSignOutButtonPresent());
-    }
-
-    @Test
-    public void createAccountPositiveTest2() {
-        register("or121rrovrishnik@gmail.de", "Qwertyui1!");
-    }
-
-    @Test
-    public void createAccountLoginPositiveTest2() {
-        register("or121112rrovrishnik@gmail.de", "Qwertyui1!");
-        logout();
-        login("or121112rrovrishnik@gmail.de", "Qwertyui1!");
     }
 
     @Test
@@ -37,10 +26,11 @@ public class CreateAccountTests extends TestBase {
 
         clickLoginLink();
         clickRegistrationButton();
-        fillInRegistrationForm("Vikla", "Viktorovich", "admintruee6@gmail.de", "Qwertyui1!");
+        String email = generateEmail("user@gmail.de");
+        fillInRegistrationForm("Vikla", "Viktorovich", email, "Qwertyui1!");
         click(By.xpath("//button[.='Зарегистрироваться']"));
 
-        type(By.className("login_input__CsLCQ"), "admintruee6@gmail.de");
+        type(By.className("login_input__CsLCQ"), email);
         type(By.name("password"), "Qwertyui1!");
         click(By.xpath("//button[.='Войти']"));
 
