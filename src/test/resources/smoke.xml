@@ -3,7 +3,7 @@
 <suite name="SmokyTest" verbose="1">
     <test name="Negative">
 <!--        <classes>-->
-<!--            <class name="com.phonebook.CreateAccountTests">-->
+<!--            <class name="com.phonebook.com.CreateAccountTests">-->
 <!--                <methods>-->
 <!--                    <include name=".*Negative.*"/>-->
 <!--                </methods>-->

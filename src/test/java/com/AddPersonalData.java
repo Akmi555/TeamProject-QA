@@ -1,3 +1,5 @@
+package com;
+
 import io.qameta.allure.testng.Tag;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -5,7 +7,6 @@ import org.testng.annotations.Test;
 
 public class AddPersonalData extends TestBase {
     private final String CONTACT_NAME = "TestName";
-
 
     @BeforeMethod
     public void preCondition() {
@@ -18,6 +19,4 @@ public class AddPersonalData extends TestBase {
         addNewContactPositiveData(CONTACT_NAME);
         Assert.assertTrue(isContactAdded(CONTACT_NAME), "Contact was not added successfully.");
     }
-
-
 }

@@ -1,3 +1,5 @@
+package com;
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -65,11 +67,11 @@ public class TestBase {
         click(By.xpath("//a[.='Выйти из аккаунта']"));
     }
 
-    protected void fillInRegistrationForm(String firstName, String lastName, String email, String password) {
-        type(By.name("firstName"), firstName);
-        type(By.name("lastName"), lastName);
-        type(By.name("email"), email);
-        type(By.name("password"), password);
+    protected void fillInRegistrationForm(User user) {
+        type(By.name("firstName"), user.firstName());
+        type(By.name("lastName"), user.lastName());
+        type(By.name("email"), user.email());
+        type(By.name("password"), user.password());
     }
 
     protected void clickRegistrationButton() {
@@ -163,5 +165,10 @@ public class TestBase {
     protected String generateEmail(String baseEmail) {
         long timestamp = Instant.now().toEpochMilli();
         return baseEmail.replace("@", "+" + timestamp + "@");
+    }
+
+    public boolean isHomeComponentPresent() {
+        System.out.println("Ищем компонент HomeComponent на домашней странице");
+        return isElementPresent(By.xpath("//h2[.='Экскурсии']"));
     }
 }

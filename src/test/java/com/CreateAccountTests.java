@@ -1,3 +1,5 @@
+package com;
+
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -11,7 +13,7 @@ public class CreateAccountTests extends TestBase {
         clickRegistrationButton();
 
         String email = generateEmail("user@gmail.de");
-        fillInRegistrationForm("Vikla", "Viktorovich", email, "Qwertyui1!");
+        fillInRegistrationForm(new User("Vikla", "Viktorovich", email, "Qwertyui1!"));
         click(By.xpath("//button[.='Зарегистрироваться']"));
 
         type(By.className("login_input__CsLCQ"), email);
@@ -27,7 +29,7 @@ public class CreateAccountTests extends TestBase {
         clickLoginLink();
         clickRegistrationButton();
         String email = generateEmail("user@gmail.de");
-        fillInRegistrationForm("Vikla", "Viktorovich", email, "Qwertyui1!");
+        fillInRegistrationForm(new User("Vikla", "Viktorovich", email, "Qwertyui1!"));
         click(By.xpath("//button[.='Зарегистрироваться']"));
 
         type(By.className("login_input__CsLCQ"), email);

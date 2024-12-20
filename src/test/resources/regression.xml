@@ -4,11 +4,11 @@
     <!-- Тесты из папки authorization/negativeTests -->
     <test name="All Tests">
         <classes>
-            <class name="AddPersonalData" />
-            <class name="CreateAccountTests" />
-            <class name="DeletedFildFirstName" />
-            <class name="LoginPositiveTests" />
-            <class name="HomePageTests" />
+            <class name="com.AddPersonalData" />
+            <class name="com.CreateAccountTests" />
+            <class name="com.DeletedFildFirstName" />
+            <class name="com.LoginPositiveTests" />
+            <class name="com.HomePageTests" />
         </classes>
     </test>
 </suite>

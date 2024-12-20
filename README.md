@@ -17,7 +17,7 @@ This repository contains a comprehensive suite of automated tests for user regis
 
 ## 📂 Project Structure
 
-- `TestBase.java`: Base class that handles the setup and teardown for the WebDriver, as well as common utilities for all tests.
+- `com.TestBase.java`: Base class that handles the setup and teardown for the WebDriver, as well as common utilities for all tests.
 - `UserAuthorizationTests/`: Tests for user login functionality, including visibility toggling for the password field.
 - `RegistrationTests/`: Tests for validating user registration fields and handling various error scenarios.
 
@@ -89,3 +89,17 @@ We welcome contributions to improve and extend the functionality of this test su
 - **TestNG**: A testing framework for running and managing tests.
 - **Java**: The programming language used for automation.
 - **Gradle**: A build automation tool used for managing dependencies and running tests.
+
+## 📚 Additional Resources
+
+Here are some useful resources and documentation for further details on our project:
+
+- **Site Mockup**: [Figma Design](https://www.figma.com/design/evRk087vs1kj6C9WSy2NAd/BerlinTravelAgency?node-id=0-1&t=TTpix9GCUxd0yve3-1)
+- **Database Schema**: [DrawSQL Diagram](https://drawsql.app/teams/boxwether/diagrams/laguna)
+- **Team Repository**: [GitHub Repository](https://github.com/Cohort47)
+- **User Stories**: [Google Sheets](https://docs.google.com/spreadsheets/d/1UYeHOXn5kmd3Y4yEEMLu5iLGqo1Pa5xvw587bIzq42M/edit?gid=0#gid=0)
+- **Project Documentation**: [Google Drive](https://drive.google.com/drive/folders/12cRzOdmp6jw_Ozosvtgih7NJ2WDGmP90?usp=sharing)
+- **Project Mind Map**: [MindMup](https://atlas.mindmup.com/2024/12/f5d91a30bec711ef8685c526422ade03/berlin_travel_agency/index.html)
+
+Feel free to explore these links to understand more about the project infrastructure and design.
+
